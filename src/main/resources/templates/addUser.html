@@ -18,13 +18,15 @@
   <label for="password" >Enter password:</label>
   <input type="password" th:field="*{password}" id="password">
   <br/>
-  <label th:for="${#ids.next('roles')}"> Roles:  </label>
-      <input type="checkbox" name="roles" id="${#ids.next('roles')}"
-            th:each="role : ${roles}"
-            th:field="*{roles}"
-            th:value="${role.id}"
-            th:text="${role.name}"
-      />
+  <label>Roles:
+    <input type="checkbox" name="roles"
+           th:each="role : ${roles}"
+           th:text="${role.name}"
+           th:value="${role.id}"
+           th:field="*{roles}"
+    />
+  </label>
+  <br/>
   <input type="submit" value="Add user"/>
 </form>
 <br/>

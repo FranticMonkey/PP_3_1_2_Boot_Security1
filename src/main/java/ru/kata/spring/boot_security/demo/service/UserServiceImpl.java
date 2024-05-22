@@ -1,86 +1,57 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.kata.spring.boot_security.demo.dao.RoleDAO;
-import ru.kata.spring.boot_security.demo.dao.UserDAO;
-import ru.kata.spring.boot_security.demo.model.Role;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class UserServiceImpl implements UserDetailsService, UserService {
-    private final UserDAO userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final RoleDAO roleRepository;
+public class UserServiceImpl implements UserService {
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserDAO userRepository, PasswordEncoder passwordEncoder, RoleDAO roleRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.roleRepository = roleRepository;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException(String.format("User %s not found", username));
-        }
-        return user.get();
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
-    @Override
-    public List<User> getListUsers() {
+    @Transactional
+    public void saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    @Override
-    public User getUser(int id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.orElse(new User());
-    }
-
-    @Override
-    @Transactional
-    public void addUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.saveUser(user);
-    }
-
-    @Override
-    @Transactional
-    public void updateUser(User user) {
-        Optional<User> userFromDB = userRepository.findByUsername(user.getUsername());
-        if (userFromDB.isPresent()) {
-            return;
-        }
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.updateUser(user);
+    public User showUserById(int id) {
+        Optional<User> userById = userRepository.findById(id);
+        return userById.orElse(null);
     }
 
     @Transactional
-    public void deleteUser(int id) {
+    public void updateUserById(int id, User updateUser) {
+        updateUser.setId(id);
+        updateUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
+        userRepository.save(updateUser);
+    }
+
+    @Transactional
+    public void deleteUserById(int id) {
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public List<Role> getListRoles() {
-        return roleRepository.findAll();
-    }
-
-    @Override
-    public User getUserByUsername(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
-        return user.orElse(new User());
     }
 }

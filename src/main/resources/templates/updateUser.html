@@ -7,18 +7,24 @@
 <body>
 <form th:method="PATCH" th:action="@{/admin/edit/{id} (id=${user.getId()})}" th:object="${user}">
     <input type="hidden" th:field="*{id}" />
-    <label for="username">username</label>
-    <input type="text" id="username" th:field="*{username}" >
-    <label for="age" >Enter age:</label>
-    <input type="number" th:field="*{age}" id="age">
-
-    <label th:for="${#ids.next('roles')}"> Roles:  </label>
-    <input type="checkbox" name="roles" id="${#ids.next('roles')}"
-           th:each="role : ${roles}"
-           th:field="*{roles}"
-           th:value="${role.id}"
-           th:text="${role.name}"
-    />
+    <label for="Username">Username</label>
+    <input type="text" th:field="*{username}" id="Username">
+    <br/>
+    <label for="Password">Password</label>
+    <input type="text" th:field="*{password}" id="Password">
+    <br/>
+    <label for="Age">Age</label>
+    <input type="number" th:field="*{age}" id="Age">
+    <br/>
+    <label>Roles:
+        <input type="checkbox" name="roles"
+               th:each="role : ${listRoles}"
+               th:text="${role.name}"
+               th:value="${role.id}"
+               th:field="*{roles}"
+        />
+    </label>
+    <br/>
     <input type="submit" value="update">
     <br/>
     <a href="/logout">Logout</a>
