@@ -1,21 +1,10 @@
-//package ru.kata.spring.boot_security.demo.repository;
-//
-//import org.springframework.data.jpa.repository.JpaRepository;
-//import org.springframework.data.jpa.repository.Query;
-//import org.springframework.data.repository.query.Param;
-//import org.springframework.stereotype.Repository;
-//import ru.kata.spring.boot_security.demo.model.User;
-//
-//import java.util.List;
-//import java.util.Optional;
-//
-//@Repository
-//public interface UserRepository extends JpaRepository<User, Integer> {
-//    @Query("select u from User u left join fetch u.roles where u.username = :username")
-//    Optional<User> findByUsername(@Param("username") String username);
-//    Optional<User> findById(int id);
-//    List<User> findAll();
-//
-//    @Override
-//    void deleteById(Integer id);
-//}
+package ru.kata.spring.boot_security.demo.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ru.kata.spring.boot_security.demo.model.User;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer> {
+    User findByUsername(String username);
+}
