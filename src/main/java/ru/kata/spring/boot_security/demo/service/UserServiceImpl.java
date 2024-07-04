@@ -51,6 +51,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
+    public User getUser(int id) {
+        return userRepository.findById(id).get();
+    }
+    @Transactional
     public void deleteUserById(int id) {
         userRepository.deleteById(id);
     }
