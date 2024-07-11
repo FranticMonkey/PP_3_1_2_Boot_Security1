@@ -51,16 +51,20 @@
                                     <thead>
                                     <tr>
                                         <th scope="col">ID</th>
-                                        <th scope="col">Username</th>
+                                        <th scope="col">First name</th>
+                                        <th scope="col">Last name</th>
                                         <th scope="col">Age</th>
+                                        <th scope="col">Email</th>
                                         <th scope="col">Role</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td th:text="${user.getId()}"></td>
-                                        <td th:text="${user.getUsername()}"></td>
-                                        <td th:text="${user.getAge()}"></td>
+                                        <td th:text="${user.getId()}">ID</td>
+                                        <td th:text="${user.getFirstName()}">First name</td>
+                                        <td th:text="${user.getLastName()}">Last name</td>
+                                        <td th:text="${user.getAge()}">Age</td>
+                                        <td th:text="${user.getEmail()}">Email</td>
                                         <td>
                                             <span th:each="role:${user.getRoles()}">
                                                 <span th:text="${role.getName().replace('ROLE_','')}">role</span>
